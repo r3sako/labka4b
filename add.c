@@ -1,23 +1,27 @@
 #include "func.h"
 
-Tree* add(Tree* tree, int key, char *info) {
-	if (!tree) {
-        Tree *new_node = malloc(sizeof(Tree));
-        new_node->key = key;
-        new_node->info = info;
-        new_node->left = NULL;
-        new_node->right = NULL;
-        new_node->height = 1;
-        return new_node;
-    }
-	if (key < tree->key)
-		tree->left = add(tree->left, key, info);
-	else if (key > tree->key)
-		tree->right = add(tree->right, key, info);
-    else
-        tree->info = info;
+Tree *T_Add(Tree* proot, char* data, int key){
+	if (proot == NULL) {
 
-	return balance(tree);
+            Tree *new = malloc(sizeof(Tree));
+            new->key = key;
+            new->left = new->right = NULL;
+	    new->data = data;
+            new->height = 1;
+
+            return new;
+        }
+	if (key > proot->key){
+		proot->right = T_Add(proot->right, data, key);
+	}
+	else if (key < proot->key){
+		proot->left = T_Add(proot->left, data, key);
+	}
+        else{
+            proot->data = data;
+	}
+
+	return rec(proot);
 }
 
 

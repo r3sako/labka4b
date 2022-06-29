@@ -1,39 +1,12 @@
 #include "func.h"
 
-const char *msgs[] = { "0. Quit", "1. Add"};
-const int NMsgs = sizeof(msgs) / sizeof(msgs[0]);
+void clear(Tree *tree) {
 
-void outputTree(char* prefix, Tree* node, int isLeft) {
-
-    if (node) {
-        printf("%s", prefix);
-        if (isLeft) printf("├──");
-        else printf("└──");
-
-        printf("%d(%s)\n", node->key, node->info);
-
-        char* addition;
-        if (isLeft) addition = "│   ";
-        else addition = "    ";
-
-        int srclen = (int) strlen(prefix);
-        int dstlen = (int) strlen(addition);
-        char* m = (char*) calloc(srclen+dstlen+1, sizeof(char));
-        memcpy(m, prefix, srclen+1);
-        memcpy(m+srclen, addition, dstlen+1);
-
-        outputTree(m, node->left, 1);
-        outputTree(m, node->right, 0);
-
-        free(m);
-    }
-}
-
-void free_tree(Tree *tree) {
-    if (tree == NULL) return;
-    free_tree(tree->left);
-    free_tree(tree->right);
-    free(tree);
+    if (tree == NULL)
+	return;
+    clear(tree->left);
+    clear(tree->right);
+    clear(tree);
 }
 
 int getInt(int *pn)

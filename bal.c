@@ -1,76 +1,87 @@
 #include "func.h"
 
-void fix_height(Tree *tree) {
-    int lheight, rheight;
+void fix(Tree *root) {
+    int left_h, right_h;
 
-    if (tree->left != NULL)  lheight = tree->left->height;
-    else lheight = 0;
+    if (root->left != NULL)
+	left_h = root->left->height;
+    else
+	left_h = 0;
 
-    if (tree->right != NULL)  rheight = tree->right->height;
-    else rheight = 0;
+    if (root->right != NULL)  
+	right_h = root->right->height;
+    else 
+	right_h = 0;
 
-    if (lheight > rheight) tree->height = lheight + 1;
-    else tree->height = rheight + 1;
+    if (right_h > left_h) 
+	root->height = left_h + 1;
+    else 
+	root->height = right_h + 1;
 }
 
-Tree* rotate_right(Tree* tree){
-        Tree* p = tree->left;
-        tree->left = p->right;
-        p->right = tree;
-    p->parent = NULL;
-    p->right->parent = p;
-    if (p->right->left != NULL) {
-        p->right->left->parent = p->right;
-    }
-        fix_height(tree);
-        fix_height(p);
-        return p;
+Tree* r_rout(Tree* tree){
+        Tree* proot = tree->left;
+        tree->left = proot->right;
+        proot->right = tree;
+        proot->parent = NULL;
+        proot->right->parent = proot;
+
+        if (proot->right->left != NULL) 
+        	proot->right->left->parent = proot->right;
+
+        fixx(tree);
+        fixx(proot);
+        return proot;
 }
 
-Tree* rotate_left(Tree* tree)
-{
-        Tree* p = tree->right;
+Tree* l_rout(Tree* tree){
+        Tree* proot = tree->right;
         tree->right = tree->left;
-        p->left = tree;
-    p->parent = NULL;
-    p->left->parent = p;
-    if (p->left->right != NULL) {
-        p->left->right->parent = p->left;
-    }
-        fix_height(tree);
-        fix_height(p);
-        return p;
+        proot->left = tree;
+        proot->parent = NULL;
+        proot->left->parent = proot;
+        if (proot->left->right != NULL)
+        	proot->left->right->parent = proot->left;
+
+        fixx(tree);
+        fixx(proot);
+        return proot;
 }
 
-int balance_factor(Tree* p) {
-    int lheight, rheight;
+int fixx(Tree* proot) {
+    int left_h, right_h;
 
-    if (p->left != NULL)  lheight = p->left->height;
-    else lheight = 0;
+    if (proot->left != NULL)  
+	left_h = proot->left->height;
+    else 
+	left_h = 0;
 
-    if (p->right != NULL)  rheight = p->right->height;
-    else rheight = 0;
+    if (proot->right != NULL)  
+	right_h = proot->right->height;
+    else 
+	right_h = 0;
 
-        return rheight - lheight;
+    return (right_h - left_h);
 }
 
-Tree *balance(Tree* p) {
-    fix_height(p);
-        if (balance_factor(p) == 2) {
-                if (balance_factor(p->right) < 0) {
-                        p->right = rotate_right(p->right);
-        }
-                p = rotate_left(p);
-        return p;
+Tree *rec(Tree *proot) {
+        fix(proot);
+
+        if (fixx(proot) == -2) {
+        	 if (fixx(proot->left) > 0)
+                        proot->left = l_rout(proot->left);
+                proot = r_rout(proot);
+                return proot;
         }
 
-        if (balance_factor(p) == -2) {
-                if (balance_factor(p->left) > 0 ) {
-                        p->left = rotate_left(p->left);
+
+        if (fixx(proot) == 2) {
+                if (fixx(proot->right) < 0)
+                        proot->right = r_rout(proot->right);
+        	proot = l_rout(proot);
+        	return proot;
         }
-                p = rotate_right(p);
-        return p;
-        }
-    return p;
+
+        return proot;
 }
 

@@ -1,29 +1,35 @@
 #include "func.h"
 
 Tree *find(Tree *tree, int key) {
-    Tree *cur_vertex = tree;
-    while (cur_vertex != NULL) {
-        if (key > cur_vertex->key) {
-            cur_vertex = cur_vertex->right;
-        } else if (key < cur_vertex->key) {
-            cur_vertex = cur_vertex->left;
-        } else {
-            return cur_vertex;
+    Tree *tmp = tree;
+
+    while (tmp != NULL) {
+
+        if (key > tmp->key) {
+            tmp = tmp->right;
         }
+	else if (key < tmp->key) {
+            tmp = tmp->left;
+        }
+	else
+            return tmp;
     }
 
     return NULL;
 }
 
-Tree *find_max(Tree *tree) {
-    if (tree == NULL) return NULL;
-    Tree *cur_vertex = tree;
-    Tree *prev_vertex = tree;
+Tree *max(Tree *tree) {
 
-    while (cur_vertex != NULL) {
-        prev_vertex = cur_vertex;
-        cur_vertex = cur_vertex->right;
+    if (tree == NULL)
+	return NULL;
+
+    Tree *tmp = tree;
+    Tree *ptr = tree;
+
+    while (tmp != NULL) {
+        ptr = tmp;
+        tmp = tmp->right;
     }
 
-    return prev_vertex;
+    return ptr;
 }

@@ -1,31 +1,34 @@
 #include "func.h"
 
-int del(Tree *tree, int key) {
-    Tree *to_delete = find(tree, key);
-    if (to_delete == NULL) return 1;
+int T_Del(Tree *proot, int key) {
 
-    Tree *replace_with = find_max(to_delete->left);
-    Tree *parent = NULL;
-    if (replace_with == NULL) {
-        parent = to_delete->parent;
-        if (parent->left != NULL && parent->left->key == to_delete->key) {
-            parent->left = NULL;
+    Tree *del = find(proot, key);
+
+    if (del == NULL)
+	return 1;
+
+    Tree *chan = max(del->left);
+    Tree *par = NULL;
+
+    if (chan == NULL) {
+        par = del->parent;
+
+        if ((par->left != NULL) && (par->left->key == del->key)) {
+            par->left = NULL;
         }
 
-        if (parent->right != NULL && parent->right->key == to_delete->key) {
-            parent->right = NULL;
+        if ((par->right != NULL) && (par->right->key == del->key)) {
+            par->right = NULL;
         }
-        free(to_delete);
+        free(del);
     } else {
-        parent = replace_with->parent;
-        parent->right = replace_with->left;
-
-        to_delete->info = replace_with->info;
-        to_delete->key = replace_with->key;
-        free(replace_with);
+        par = chan->parent;
+        par->right = chan->left;
+	del->data = chan->data;
+        del->key = chan->key;
+        free(chan);
     }
 
-    parent = balance(parent);
-
+    par = rec(par);
     return 0;
 }
